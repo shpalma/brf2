@@ -109,7 +109,6 @@ namespace brf
          lvFinalPrev.Items.Add("Folder: " + globFolder);
          lvFinalPrev.Items.Add("------------------------------");
 
-
       }
    }
 }
