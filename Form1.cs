@@ -22,70 +22,48 @@ namespace brf
       // public vars
       public string globFolder;
       public FileInfo[] globFileTypes;
-      public const string vbCrl = "\\n";
       public SearchOption SearchOptionUserType;
 
-      private void pbFolder_Click(object sender, EventArgs e)
+      // public constants
+      public const string vbCrl = "\\n";
+      public string filetypeOffice = "*.doc, *.xls, *.ppt";
+      public string filetypeOfficex = "*.docx, *.xlsx, *.pptx";
+
+      /// <summary>
+      /// reset values from folder and file forms
+      /// </summary>
+      private void resetFolderAndFiles()
       {
-         FolderBrowserDialog fbdResult = new FolderBrowserDialog();
-         int counter = 0;
+         chkbFilesDocs.Checked = false;
+         chkbFilesImg.Checked = false;
+         chkbFilesSound.Checked = false;
+         chkbFilesVideo.Checked = false;
+         chkbFilesOther.Checked = false;
+         chkbtext.Checked = false;
+         chkbFilesAll.Checked = false;
+         chksubfolders.Checked = false;
 
-         if ((chkbFilesDocs.Checked != true) && 
-            (chkbFilesImg.Checked != true) && 
-            (chkbFilesSound.Checked != true) && 
-            (chkbFilesAll.Checked != true) && 
-            (chkbFilesVideo.Checked != true) && 
-            (chkbFilesOther.Checked != true))
-         {
-            if ((chkbFilesOther.Checked == true) &&
-               (txtbFileTypes.ReadOnly == false) &&
-               (String.IsNullOrEmpty(txtbFileTypes.Text)))
-            {
-               MessageBox.Show("Write file type!", "Atention!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-               _ = txtbFileTypes.Focus();
-               return;
-            }
-            else 
-            {
-               MessageBox.Show("Select file type (at least one)!", "Atention!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-               _ = chkbFilesDocs.Focus();
-               return;
-            }
-         }
+         txtbFileTypes.Text = string.Empty;
+         txtbSelectedFolder.Text = string.Empty;
 
-         if ((chkbFilesOther.Checked == true) &&
-              (txtbFileTypes.ReadOnly == false) &&
-              (String.IsNullOrEmpty(txtbFileTypes.Text)))
-         {
-            MessageBox.Show("Write file type!", "Atention!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            _ = txtbFileTypes.Focus();
-            return;
-         }
+         globFolder = string.Empty;
+         lvFilesFolders.Clear();
+      }
 
-         
-         if (fbdFolder.ShowDialog() == DialogResult.OK)
-         {
-            txtbSelectedFolder.Text = fbdFolder.SelectedPath.ToString();
-            globFolder = txtbSelectedFolder.Text;
-         }
+      /// <summary>
+      /// reset values from what and where forms
+      /// </summary>
+      private void resetWhatandWhere()
+      {
+         txtReplaceThis.Text = string.Empty;
+         txtReplaceForThis.Text = string.Empty;
+         txtRegex.Text = string.Empty;
 
-         DirectoryInfo dir = new DirectoryInfo(globFolder);
-         globFileTypes = dir.GetFiles(txtbFileTypes.Text, SearchOptionUserType);
+         rbjustremove.Checked = false;
+         rbregex.Checked = false;
+         chkOpenFE.Checked = false;
 
-         lvFilesFolders.Scrollable = true;
-         lvFilesFolders.View = View.Details;
-
-         lvFilesFolders.Items.Add("Folder: " + globFolder);
-         lvFilesFolders.Items.Add("------------------------------");
-
-         foreach (FileInfo file in globFileTypes)
-         {
-            counter += 1;
-            Console.WriteLine("File Name : {0}", file.Name);
-            lvFilesFolders.Items.Add("N° " + counter.ToString() + " " + file.Name.ToString());
-         }
-
-         _ = txtReplaceThis.Focus();
+         lvFinalPrev.Clear();
 
       }
 
@@ -96,6 +74,7 @@ namespace brf
 
       private void chkbFilesOther_CheckedChanged(object sender, EventArgs e)
       {
+         // enable the option to enter manually what type of files to read
          if ((chkbFilesOther.Checked) && String.IsNullOrEmpty(txtbFileTypes.Text))
          {
             txtbFileTypes.ReadOnly = false;
@@ -109,6 +88,11 @@ namespace brf
 
       }
 
+      /// <summary>
+      /// Display a preview: of how the files going to be once finished the process
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
       private void btnPreview_Click(object sender, EventArgs e)
       {
          int counter = 0;
@@ -130,6 +114,11 @@ namespace brf
 
       }
 
+      /// <summary>
+      /// the renaming process
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
       private void btnSubmit_Click(object sender, EventArgs e)
       {
          int counter = 0;
@@ -153,7 +142,7 @@ namespace brf
                }
                catch (Win32Exception w32Exce)
                {
-                  //The system cannot find the file specified...
+                  //The system wasn't able to execute the task...
                   Console.WriteLine(w32Exce.Message);
                   MessageBox.Show("Error to open File Explorer: " + vbCrl + w32Exce.Message.ToString(), "Something went wrong...", MessageBoxButtons.OK, MessageBoxIcon.Error);
                }
@@ -165,17 +154,115 @@ namespace brf
          catch (IOException ioEx)
          {
             Console.WriteLine(ioEx.Message);
-            MessageBox.Show("Error on renaming files: " + vbCrl + ioEx.Message.ToString(), "Something went wrong...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show("Error on renaming files: " + vbCrl + ioEx.Message.ToString(), "File system Error:", MessageBoxButtons.OK, MessageBoxIcon.Error);
+         }
+         catch (Exception ex)
+         {
+            Console.WriteLine(ex.Message);
+            MessageBox.Show("Error on renaming files: " + vbCrl + ex.Message.ToString(), "Other error type: ", MessageBoxButtons.OK, MessageBoxIcon.Error);
          }
          
       }
 
+      /// <summary>
+      /// set up whether must use sub folder option (cascade file read) 
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
       private void chksubfolders_CheckedChanged(object sender, EventArgs e)
       {
          if (chksubfolders.Enabled)
             SearchOptionUserType = SearchOption.AllDirectories;
          else
             SearchOptionUserType = SearchOption.TopDirectoryOnly;
+      }
+
+      private void btnResetFileFolder_Click(object sender, EventArgs e)
+      {
+         resetFolderAndFiles();
+      }
+
+      private void btnResetWhatTo_Click(object sender, EventArgs e)
+      {
+         resetWhatandWhere();
+      }
+
+      private void btnResetAll_Click(object sender, EventArgs e)
+      {
+         resetFolderAndFiles();
+         resetWhatandWhere();
+
+      }
+
+      /// <summary>
+      /// main process
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
+      private void btnSelectFolder_Click(object sender, EventArgs e)
+      {
+         FolderBrowserDialog fbdResult = new FolderBrowserDialog();
+         int counter = 0;
+
+         if ((chkbFilesDocs.Checked != true) &&
+            (chkbFilesImg.Checked != true) &&
+            (chkbFilesSound.Checked != true) &&
+            (chkbFilesAll.Checked != true) &&
+            (chkbFilesVideo.Checked != true) &&
+            (chkbFilesOther.Checked != true))
+         {
+            if ((chkbFilesOther.Checked == true) &&
+               (txtbFileTypes.ReadOnly == false) &&
+               (String.IsNullOrEmpty(txtbFileTypes.Text)))
+            {
+               MessageBox.Show("Write file type!", "Atention!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+               _ = txtbFileTypes.Focus();
+               return;
+            }
+            else
+            {
+               MessageBox.Show("Select file type (at least one)!", "Atention!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+               _ = chkbFilesDocs.Focus();
+               return;
+            }
+         }
+
+         if ((chkbFilesOther.Checked == true) &&
+              (txtbFileTypes.ReadOnly == false) &&
+              (String.IsNullOrEmpty(txtbFileTypes.Text)))
+         {
+            MessageBox.Show("Write file type!", "Atention!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            _ = txtbFileTypes.Focus();
+            return;
+         }
+
+         // select folder to work
+         if (fbdFolder.ShowDialog() == DialogResult.OK)
+         {
+            txtbSelectedFolder.Text = fbdFolder.SelectedPath.ToString();
+            globFolder = txtbSelectedFolder.Text;
+         }
+
+         // set up folder 
+         DirectoryInfo dir = new DirectoryInfo(globFolder);
+         // get a file list
+         globFileTypes = dir.GetFiles(txtbFileTypes.Text, SearchOptionUserType);
+
+         lvFilesFolders.Scrollable = true;
+         lvFilesFolders.View = View.Details;
+
+         lvFilesFolders.Items.Add("Folder: " + globFolder);
+         lvFilesFolders.Items.Add("------------------------------");
+
+         // display the folder and files selected
+         foreach (FileInfo file in globFileTypes)
+         {
+            counter += 1;
+            Console.WriteLine("File Name : {0}", file.Name);
+            lvFilesFolders.Items.Add("N° " + counter.ToString() + " " + file.Name.ToString());
+         }
+
+         _ = txtReplaceThis.Focus();
       }
    }
 }

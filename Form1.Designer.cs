@@ -30,6 +30,7 @@ namespace brf
       private void InitializeComponent()
       {
          this.gbFiles = new System.Windows.Forms.GroupBox();
+         this.chksubfolders = new System.Windows.Forms.CheckBox();
          this.btnResetFileFolder = new System.Windows.Forms.Button();
          this.label2 = new System.Windows.Forms.Label();
          this.txtbFileTypes = new System.Windows.Forms.TextBox();
@@ -40,11 +41,13 @@ namespace brf
          this.chkbFilesImg = new System.Windows.Forms.CheckBox();
          this.chkbFilesAll = new System.Windows.Forms.CheckBox();
          this.lblfilefilters = new System.Windows.Forms.Label();
-         this.pbFolder = new System.Windows.Forms.PictureBox();
          this.txtbSelectedFolder = new System.Windows.Forms.TextBox();
          this.lblFolder = new System.Windows.Forms.Label();
          this.fbdFolder = new System.Windows.Forms.FolderBrowserDialog();
          this.gbWhattoReplace = new System.Windows.Forms.GroupBox();
+         this.lblregex = new System.Windows.Forms.Label();
+         this.txtRegex = new System.Windows.Forms.TextBox();
+         this.rbregex = new System.Windows.Forms.RadioButton();
          this.btnPreview = new System.Windows.Forms.Button();
          this.btnResetWhatTo = new System.Windows.Forms.Button();
          this.rbjustremove = new System.Windows.Forms.RadioButton();
@@ -56,17 +59,14 @@ namespace brf
          this.lvFilesFolders = new System.Windows.Forms.ListView();
          this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
          this.grpbFinalpreview = new System.Windows.Forms.GroupBox();
+         this.chkOpenFE = new System.Windows.Forms.CheckBox();
+         this.btnResetAll = new System.Windows.Forms.Button();
          this.btnSubmit = new System.Windows.Forms.Button();
          this.lvFinalPrev = new System.Windows.Forms.ListView();
          this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-         this.button1 = new System.Windows.Forms.Button();
-         this.chkOpenFE = new System.Windows.Forms.CheckBox();
-         this.rbregex = new System.Windows.Forms.RadioButton();
-         this.textBox1 = new System.Windows.Forms.TextBox();
-         this.lblregex = new System.Windows.Forms.Label();
-         this.chksubfolders = new System.Windows.Forms.CheckBox();
+         this.chkbtext = new System.Windows.Forms.CheckBox();
+         this.btnSelectFolder = new System.Windows.Forms.Button();
          this.gbFiles.SuspendLayout();
-         ((System.ComponentModel.ISupportInitialize)(this.pbFolder)).BeginInit();
          this.gbWhattoReplace.SuspendLayout();
          this.grpbpreviewFileFolders.SuspendLayout();
          this.grpbFinalpreview.SuspendLayout();
@@ -74,6 +74,8 @@ namespace brf
          // 
          // gbFiles
          // 
+         this.gbFiles.Controls.Add(this.btnSelectFolder);
+         this.gbFiles.Controls.Add(this.chkbtext);
          this.gbFiles.Controls.Add(this.chksubfolders);
          this.gbFiles.Controls.Add(this.btnResetFileFolder);
          this.gbFiles.Controls.Add(this.label2);
@@ -85,7 +87,6 @@ namespace brf
          this.gbFiles.Controls.Add(this.chkbFilesImg);
          this.gbFiles.Controls.Add(this.chkbFilesAll);
          this.gbFiles.Controls.Add(this.lblfilefilters);
-         this.gbFiles.Controls.Add(this.pbFolder);
          this.gbFiles.Controls.Add(this.txtbSelectedFolder);
          this.gbFiles.Controls.Add(this.lblFolder);
          this.gbFiles.Location = new System.Drawing.Point(12, 12);
@@ -93,38 +94,50 @@ namespace brf
          this.gbFiles.Size = new System.Drawing.Size(603, 100);
          this.gbFiles.TabIndex = 0;
          this.gbFiles.TabStop = false;
-         this.gbFiles.Text = "Files types and Folders";
+         this.gbFiles.Text = "Select folder and define file type(s)";
+         // 
+         // chksubfolders
+         // 
+         this.chksubfolders.AutoSize = true;
+         this.chksubfolders.Location = new System.Drawing.Point(254, 62);
+         this.chksubfolders.Name = "chksubfolders";
+         this.chksubfolders.Size = new System.Drawing.Size(85, 17);
+         this.chksubfolders.TabIndex = 17;
+         this.chksubfolders.Text = "Sub folders?";
+         this.chksubfolders.UseVisualStyleBackColor = true;
+         this.chksubfolders.CheckedChanged += new System.EventHandler(this.chksubfolders_CheckedChanged);
          // 
          // btnResetFileFolder
          // 
-         this.btnResetFileFolder.Location = new System.Drawing.Point(498, 71);
+         this.btnResetFileFolder.Location = new System.Drawing.Point(516, 66);
          this.btnResetFileFolder.Name = "btnResetFileFolder";
          this.btnResetFileFolder.Size = new System.Drawing.Size(75, 23);
          this.btnResetFileFolder.TabIndex = 16;
          this.btnResetFileFolder.Text = "Reset this";
          this.btnResetFileFolder.UseVisualStyleBackColor = true;
+         this.btnResetFileFolder.Click += new System.EventHandler(this.btnResetFileFolder_Click);
          // 
          // label2
          // 
          this.label2.AutoSize = true;
-         this.label2.Location = new System.Drawing.Point(7, 39);
+         this.label2.Location = new System.Drawing.Point(251, 39);
          this.label2.Name = "label2";
-         this.label2.Size = new System.Drawing.Size(83, 13);
+         this.label2.Size = new System.Drawing.Size(198, 13);
          this.label2.TabIndex = 15;
-         this.label2.Text = "Other file types: ";
+         this.label2.Text = "separate with comma (,) if more than one";
          // 
          // txtbFileTypes
          // 
-         this.txtbFileTypes.Location = new System.Drawing.Point(110, 39);
+         this.txtbFileTypes.Location = new System.Drawing.Point(454, 39);
          this.txtbFileTypes.Name = "txtbFileTypes";
          this.txtbFileTypes.ReadOnly = true;
-         this.txtbFileTypes.Size = new System.Drawing.Size(239, 20);
+         this.txtbFileTypes.Size = new System.Drawing.Size(137, 20);
          this.txtbFileTypes.TabIndex = 14;
          // 
          // chkbFilesOther
          // 
          this.chkbFilesOther.AutoSize = true;
-         this.chkbFilesOther.Location = new System.Drawing.Point(498, 16);
+         this.chkbFilesOther.Location = new System.Drawing.Point(454, 16);
          this.chkbFilesOther.Name = "chkbFilesOther";
          this.chkbFilesOther.Size = new System.Drawing.Size(94, 17);
          this.chkbFilesOther.TabIndex = 13;
@@ -139,7 +152,7 @@ namespace brf
          this.chkbFilesDocs.Name = "chkbFilesDocs";
          this.chkbFilesDocs.Size = new System.Drawing.Size(117, 17);
          this.chkbFilesDocs.TabIndex = 12;
-         this.chkbFilesDocs.Text = "Documents (Office)";
+         this.chkbFilesDocs.Text = "Office (Documents)";
          this.chkbFilesDocs.UseVisualStyleBackColor = true;
          // 
          // chkbFilesSound
@@ -155,7 +168,7 @@ namespace brf
          // chkbFilesVideo
          // 
          this.chkbFilesVideo.AutoSize = true;
-         this.chkbFilesVideo.Location = new System.Drawing.Point(439, 16);
+         this.chkbFilesVideo.Location = new System.Drawing.Point(355, 16);
          this.chkbFilesVideo.Name = "chkbFilesVideo";
          this.chkbFilesVideo.Size = new System.Drawing.Size(53, 17);
          this.chkbFilesVideo.TabIndex = 10;
@@ -175,11 +188,11 @@ namespace brf
          // chkbFilesAll
          // 
          this.chkbFilesAll.AutoSize = true;
-         this.chkbFilesAll.Location = new System.Drawing.Point(355, 16);
+         this.chkbFilesAll.Location = new System.Drawing.Point(163, 35);
          this.chkbFilesAll.Name = "chkbFilesAll";
-         this.chkbFilesAll.Size = new System.Drawing.Size(78, 17);
+         this.chkbFilesAll.Size = new System.Drawing.Size(77, 17);
          this.chkbFilesAll.TabIndex = 8;
-         this.chkbFilesAll.Text = "All files (*.*)";
+         this.chkbFilesAll.Text = "All of it (*.*)";
          this.chkbFilesAll.UseVisualStyleBackColor = true;
          // 
          // lblfilefilters
@@ -190,19 +203,6 @@ namespace brf
          this.lblfilefilters.Size = new System.Drawing.Size(56, 13);
          this.lblfilefilters.TabIndex = 4;
          this.lblfilefilters.Text = "File filters: ";
-         // 
-         // pbFolder
-         // 
-         this.pbFolder.Image = global::brf.Properties.Resources.icons8_open_folder_kmg_design_flat_16;
-         this.pbFolder.Location = new System.Drawing.Point(355, 64);
-         this.pbFolder.Name = "pbFolder";
-         this.pbFolder.Padding = new System.Windows.Forms.Padding(1);
-         this.pbFolder.Size = new System.Drawing.Size(18, 18);
-         this.pbFolder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-         this.pbFolder.TabIndex = 3;
-         this.pbFolder.TabStop = false;
-         this.pbFolder.Tag = "Open Folder";
-         this.pbFolder.Click += new System.EventHandler(this.pbFolder_Click);
          // 
          // txtbSelectedFolder
          // 
@@ -223,7 +223,7 @@ namespace brf
          // gbWhattoReplace
          // 
          this.gbWhattoReplace.Controls.Add(this.lblregex);
-         this.gbWhattoReplace.Controls.Add(this.textBox1);
+         this.gbWhattoReplace.Controls.Add(this.txtRegex);
          this.gbWhattoReplace.Controls.Add(this.rbregex);
          this.gbWhattoReplace.Controls.Add(this.btnPreview);
          this.gbWhattoReplace.Controls.Add(this.btnResetWhatTo);
@@ -237,11 +237,39 @@ namespace brf
          this.gbWhattoReplace.Size = new System.Drawing.Size(603, 87);
          this.gbWhattoReplace.TabIndex = 1;
          this.gbWhattoReplace.TabStop = false;
-         this.gbWhattoReplace.Text = "What and where to replace it!?";
+         this.gbWhattoReplace.Text = "What and (but not less important) where to replace it.";
+         // 
+         // lblregex
+         // 
+         this.lblregex.AutoSize = true;
+         this.lblregex.Location = new System.Drawing.Point(179, 52);
+         this.lblregex.Name = "lblregex";
+         this.lblregex.Size = new System.Drawing.Size(41, 13);
+         this.lblregex.TabIndex = 9;
+         this.lblregex.Text = "Regex:";
+         // 
+         // txtRegex
+         // 
+         this.txtRegex.Location = new System.Drawing.Point(233, 51);
+         this.txtRegex.Name = "txtRegex";
+         this.txtRegex.Size = new System.Drawing.Size(180, 20);
+         this.txtRegex.TabIndex = 8;
+         // 
+         // rbregex
+         // 
+         this.rbregex.AutoSize = true;
+         this.rbregex.Enabled = false;
+         this.rbregex.Location = new System.Drawing.Point(92, 51);
+         this.rbregex.Name = "rbregex";
+         this.rbregex.Size = new System.Drawing.Size(56, 17);
+         this.rbregex.TabIndex = 7;
+         this.rbregex.TabStop = true;
+         this.rbregex.Text = "Regex";
+         this.rbregex.UseVisualStyleBackColor = true;
          // 
          // btnPreview
          // 
-         this.btnPreview.Location = new System.Drawing.Point(498, 17);
+         this.btnPreview.Location = new System.Drawing.Point(516, 16);
          this.btnPreview.Name = "btnPreview";
          this.btnPreview.Size = new System.Drawing.Size(75, 23);
          this.btnPreview.TabIndex = 6;
@@ -251,12 +279,13 @@ namespace brf
          // 
          // btnResetWhatTo
          // 
-         this.btnResetWhatTo.Location = new System.Drawing.Point(498, 52);
+         this.btnResetWhatTo.Location = new System.Drawing.Point(516, 49);
          this.btnResetWhatTo.Name = "btnResetWhatTo";
          this.btnResetWhatTo.Size = new System.Drawing.Size(75, 23);
          this.btnResetWhatTo.TabIndex = 5;
          this.btnResetWhatTo.Text = "Reset this";
          this.btnResetWhatTo.UseVisualStyleBackColor = true;
+         this.btnResetWhatTo.Click += new System.EventHandler(this.btnResetWhatTo_Click);
          // 
          // rbjustremove
          // 
@@ -309,7 +338,7 @@ namespace brf
          this.grpbpreviewFileFolders.Size = new System.Drawing.Size(603, 111);
          this.grpbpreviewFileFolders.TabIndex = 2;
          this.grpbpreviewFileFolders.TabStop = false;
-         this.grpbpreviewFileFolders.Text = "Preview selected files and folders";
+         this.grpbpreviewFileFolders.Text = "Preview selected folder and files";
          // 
          // lvFilesFolders
          // 
@@ -330,7 +359,7 @@ namespace brf
          // grpbFinalpreview
          // 
          this.grpbFinalpreview.Controls.Add(this.chkOpenFE);
-         this.grpbFinalpreview.Controls.Add(this.button1);
+         this.grpbFinalpreview.Controls.Add(this.btnResetAll);
          this.grpbFinalpreview.Controls.Add(this.btnSubmit);
          this.grpbFinalpreview.Controls.Add(this.lvFinalPrev);
          this.grpbFinalpreview.Location = new System.Drawing.Point(12, 328);
@@ -338,7 +367,27 @@ namespace brf
          this.grpbFinalpreview.Size = new System.Drawing.Size(602, 139);
          this.grpbFinalpreview.TabIndex = 3;
          this.grpbFinalpreview.TabStop = false;
-         this.grpbFinalpreview.Text = "Final Preview. Do you submit?";
+         this.grpbFinalpreview.Text = "How it gonna look? (...this is the final preview)";
+         // 
+         // chkOpenFE
+         // 
+         this.chkOpenFE.AutoSize = true;
+         this.chkOpenFE.Location = new System.Drawing.Point(6, 107);
+         this.chkOpenFE.Name = "chkOpenFE";
+         this.chkOpenFE.Size = new System.Drawing.Size(211, 17);
+         this.chkOpenFE.TabIndex = 3;
+         this.chkOpenFE.Text = "Open folder in File Explorer when done!";
+         this.chkOpenFE.UseVisualStyleBackColor = true;
+         // 
+         // btnResetAll
+         // 
+         this.btnResetAll.Location = new System.Drawing.Point(478, 107);
+         this.btnResetAll.Name = "btnResetAll";
+         this.btnResetAll.Size = new System.Drawing.Size(113, 23);
+         this.btnResetAll.TabIndex = 2;
+         this.btnResetAll.Text = "Reset everything!";
+         this.btnResetAll.UseVisualStyleBackColor = true;
+         this.btnResetAll.Click += new System.EventHandler(this.btnResetAll_Click);
          // 
          // btnSubmit
          // 
@@ -366,63 +415,25 @@ namespace brf
          this.columnHeader2.Text = "";
          this.columnHeader2.Width = 200;
          // 
-         // button1
+         // chkbtext
          // 
-         this.button1.Location = new System.Drawing.Point(478, 107);
-         this.button1.Name = "button1";
-         this.button1.Size = new System.Drawing.Size(113, 23);
-         this.button1.TabIndex = 2;
-         this.button1.Text = "Reset everything!";
-         this.button1.UseVisualStyleBackColor = true;
+         this.chkbtext.AutoSize = true;
+         this.chkbtext.Location = new System.Drawing.Point(110, 34);
+         this.chkbtext.Name = "chkbtext";
+         this.chkbtext.Size = new System.Drawing.Size(47, 17);
+         this.chkbtext.TabIndex = 18;
+         this.chkbtext.Text = "Text";
+         this.chkbtext.UseVisualStyleBackColor = true;
          // 
-         // chkOpenFE
+         // btnSelectFolder
          // 
-         this.chkOpenFE.AutoSize = true;
-         this.chkOpenFE.Location = new System.Drawing.Point(6, 107);
-         this.chkOpenFE.Name = "chkOpenFE";
-         this.chkOpenFE.Size = new System.Drawing.Size(211, 17);
-         this.chkOpenFE.TabIndex = 3;
-         this.chkOpenFE.Text = "Open folder in File Explorer when done!";
-         this.chkOpenFE.UseVisualStyleBackColor = true;
-         // 
-         // rbregex
-         // 
-         this.rbregex.AutoSize = true;
-         this.rbregex.Enabled = false;
-         this.rbregex.Location = new System.Drawing.Point(92, 51);
-         this.rbregex.Name = "rbregex";
-         this.rbregex.Size = new System.Drawing.Size(56, 17);
-         this.rbregex.TabIndex = 7;
-         this.rbregex.TabStop = true;
-         this.rbregex.Text = "Regex";
-         this.rbregex.UseVisualStyleBackColor = true;
-         // 
-         // textBox1
-         // 
-         this.textBox1.Location = new System.Drawing.Point(233, 51);
-         this.textBox1.Name = "textBox1";
-         this.textBox1.Size = new System.Drawing.Size(180, 20);
-         this.textBox1.TabIndex = 8;
-         // 
-         // lblregex
-         // 
-         this.lblregex.AutoSize = true;
-         this.lblregex.Location = new System.Drawing.Point(179, 52);
-         this.lblregex.Name = "lblregex";
-         this.lblregex.Size = new System.Drawing.Size(41, 13);
-         this.lblregex.TabIndex = 9;
-         this.lblregex.Text = "Regex:";
-         // 
-         // chksubfolders
-         // 
-         this.chksubfolders.AutoSize = true;
-         this.chksubfolders.Location = new System.Drawing.Point(254, 62);
-         this.chksubfolders.Name = "chksubfolders";
-         this.chksubfolders.Size = new System.Drawing.Size(85, 17);
-         this.chksubfolders.TabIndex = 17;
-         this.chksubfolders.Text = "Sub folders?";
-         this.chksubfolders.UseVisualStyleBackColor = true;
-         this.chksubfolders.CheckedChanged += new System.EventHandler(this.chksubfolders_CheckedChanged);
+         this.btnSelectFolder.Location = new System.Drawing.Point(338, 60);
+         this.btnSelectFolder.Name = "btnSelectFolder";
+         this.btnSelectFolder.Size = new System.Drawing.Size(75, 23);
+         this.btnSelectFolder.TabIndex = 19;
+         this.btnSelectFolder.Text = "Select folder";
+         this.btnSelectFolder.UseVisualStyleBackColor = true;
+         this.btnSelectFolder.Click += new System.EventHandler(this.btnSelectFolder_Click);
          // 
          // frmMain
          // 
@@ -437,11 +448,10 @@ namespace brf
          this.MinimizeBox = false;
          this.Name = "frmMain";
          this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-         this.Text = "BRF";
+         this.Text = "BRF (Bulk rename files!)";
          this.Load += new System.EventHandler(this.frmMain_Load);
          this.gbFiles.ResumeLayout(false);
          this.gbFiles.PerformLayout();
-         ((System.ComponentModel.ISupportInitialize)(this.pbFolder)).EndInit();
          this.gbWhattoReplace.ResumeLayout(false);
          this.gbWhattoReplace.PerformLayout();
          this.grpbpreviewFileFolders.ResumeLayout(false);
@@ -455,7 +465,6 @@ namespace brf
 
       private System.Windows.Forms.GroupBox gbFiles;
       private System.Windows.Forms.Label lblFolder;
-      private System.Windows.Forms.PictureBox pbFolder;
       private System.Windows.Forms.TextBox txtbSelectedFolder;
       private System.Windows.Forms.FolderBrowserDialog fbdFolder;
       private System.Windows.Forms.Label lblfilefilters;
@@ -483,12 +492,14 @@ namespace brf
       private System.Windows.Forms.ColumnHeader columnHeader1;
       private System.Windows.Forms.Button btnPreview;
       private System.Windows.Forms.ColumnHeader columnHeader2;
-      private System.Windows.Forms.Button button1;
+      private System.Windows.Forms.Button btnResetAll;
       private System.Windows.Forms.Label lblregex;
-      private System.Windows.Forms.TextBox textBox1;
+      private System.Windows.Forms.TextBox txtRegex;
       private System.Windows.Forms.RadioButton rbregex;
       private System.Windows.Forms.CheckBox chkOpenFE;
       private System.Windows.Forms.CheckBox chksubfolders;
+      private System.Windows.Forms.CheckBox chkbtext;
+      private System.Windows.Forms.Button btnSelectFolder;
    }
 }
 
