@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -18,8 +19,11 @@ namespace brf
          InitializeComponent();
       }
 
+      // public vars
       public string globFolder;
-      public string globFileTypes;
+      public FileInfo[] globFileTypes;
+      public const string vbCrl = "\\n";
+      public SearchOption SearchOptionUserType;
 
       private void pbFolder_Click(object sender, EventArgs e)
       {
@@ -58,6 +62,7 @@ namespace brf
             return;
          }
 
+         
          if (fbdFolder.ShowDialog() == DialogResult.OK)
          {
             txtbSelectedFolder.Text = fbdFolder.SelectedPath.ToString();
@@ -65,7 +70,7 @@ namespace brf
          }
 
          DirectoryInfo dir = new DirectoryInfo(globFolder);
-         FileInfo[] files = dir.GetFiles(txtbFileTypes.Text);
+         globFileTypes = dir.GetFiles(txtbFileTypes.Text, SearchOptionUserType);
 
          lvFilesFolders.Scrollable = true;
          lvFilesFolders.View = View.Details;
@@ -73,7 +78,7 @@ namespace brf
          lvFilesFolders.Items.Add("Folder: " + globFolder);
          lvFilesFolders.Items.Add("------------------------------");
 
-         foreach (FileInfo file in files)
+         foreach (FileInfo file in globFileTypes)
          {
             counter += 1;
             Console.WriteLine("File Name : {0}", file.Name);
@@ -106,9 +111,71 @@ namespace brf
 
       private void btnPreview_Click(object sender, EventArgs e)
       {
+         int counter = 0;
+         string finalName = string.Empty;
+
+         lvFinalPrev.Scrollable = true;
+         lvFinalPrev.View = View.Details;
+
          lvFinalPrev.Items.Add("Folder: " + globFolder);
          lvFinalPrev.Items.Add("------------------------------");
 
+         foreach (FileInfo file in globFileTypes)
+         {
+            counter += 1;
+            finalName = file.Name.Replace(txtReplaceThis.Text, txtReplaceForThis.Text);
+            Console.WriteLine("File Name : {0}", finalName);
+            lvFinalPrev.Items.Add("N° " + counter.ToString() + " " + finalName);
+         }
+
+      }
+
+      private void btnSubmit_Click(object sender, EventArgs e)
+      {
+         int counter = 0;
+         string finalName = string.Empty;
+
+         try
+         {
+            foreach (FileInfo file in globFileTypes)
+            {
+               counter += 1;
+               finalName = file.Name.Replace(txtReplaceThis.Text, txtReplaceForThis.Text);
+               File.Move(globFolder + "\\" + file, globFolder + "\\" + finalName);
+            }
+
+            if (chkOpenFE.Checked)
+            {
+               try
+               {
+                  // open folder in file explorer once the proccess it's done
+                  Process.Start(globFolder);
+               }
+               catch (Win32Exception w32Exce)
+               {
+                  //The system cannot find the file specified...
+                  Console.WriteLine(w32Exce.Message);
+                  MessageBox.Show("Error to open File Explorer: " + vbCrl + w32Exce.Message.ToString(), "Something went wrong...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+               }
+            }
+
+            MessageBox.Show("The process finished!" + vbCrl + "...everything was like a globe!", "Success: files renamed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+         }
+         catch (IOException ioEx)
+         {
+            Console.WriteLine(ioEx.Message);
+            MessageBox.Show("Error on renaming files: " + vbCrl + ioEx.Message.ToString(), "Something went wrong...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+         }
+         
+      }
+
+      private void chksubfolders_CheckedChanged(object sender, EventArgs e)
+      {
+         if (chksubfolders.Enabled)
+            SearchOptionUserType = SearchOption.AllDirectories;
+         else
+            SearchOptionUserType = SearchOption.TopDirectoryOnly;
       }
    }
 }
