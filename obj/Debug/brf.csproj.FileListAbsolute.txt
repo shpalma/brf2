@@ -7,4 +7,3 @@ C:\-- smid\desaTest\01 BulkRenameFiles\brf\obj\Debug\brf.csproj.GenerateResource
 C:\-- smid\desaTest\01 BulkRenameFiles\brf\obj\Debug\brf.csproj.CoreCompileInputs.cache
 C:\-- smid\desaTest\01 BulkRenameFiles\brf\obj\Debug\brf.exe
 C:\-- smid\desaTest\01 BulkRenameFiles\brf\obj\Debug\brf.pdb
-C:\-- smid\desaTest\01 BulkRenameFiles\brf\obj\Debug\brf.csproj.AssemblyReference.cache
