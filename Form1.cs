@@ -25,9 +25,10 @@ namespace brf
       public SearchOption SearchOptionUserType;
 
       // public constants
-      public const string vbCrl = "\\n";
-      public string filetypeOffice = "*.doc, *.xls, *.ppt";
-      public string filetypeOfficex = "*.docx, *.xlsx, *.pptx";
+      public const string vbCrl = "\n";
+      public const string backslash = "\\";
+      public const string filetypeOffice = "*.doc, *.xls, *.ppt";
+      public const string filetypeOfficex = "*.docx, *.xlsx, *.pptx";
 
       /// <summary>
       /// reset values from folder and file forms
@@ -130,7 +131,7 @@ namespace brf
             {
                counter += 1;
                finalName = file.Name.Replace(txtReplaceThis.Text, txtReplaceForThis.Text);
-               File.Move(globFolder + "\\" + file, globFolder + "\\" + finalName);
+               File.Move(globFolder + backslash + file, globFolder + backslash + finalName);
             }
 
             if (chkOpenFE.Checked)
@@ -148,7 +149,7 @@ namespace brf
                }
             }
 
-            MessageBox.Show("The process finished!" + vbCrl + "...everything was like a globe!", "Success: files renamed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("The process renamed " + counter.ToString() + " files!" + vbCrl + "...Everything was like a globe!", "Success: files renamed", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
          }
          catch (IOException ioEx)
