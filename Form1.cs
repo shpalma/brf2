@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
+using System.Configuration;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace brf
@@ -25,10 +20,13 @@ namespace brf
       public SearchOption SearchOptionUserType;
 
       // public constants
-      public const string vbCrl = "\n";
-      public const string backslash = "\\";
-      public const string filetypeOffice = "*.doc, *.xls, *.ppt";
-      public const string filetypeOfficex = "*.docx, *.xlsx, *.pptx";
+      private const string vbCrl = "\n";
+      private const string backslash = "\\";
+      private const string filetypeOffice = ConfigurationManager.AppSettings["filetypeOffice"];
+      private const string filetypeOfficex = ConfigurationManager.AppSettings["filetypeOfficex"];
+      private const string filetypeImage = ConfigurationManager.AppSettings["filetypeImage"];
+      private const string filetypeVideo = ConfigurationManager.AppSettings["filetypeVideo"];
+      private const string filetypeText = ConfigurationManager.AppSettings["filetypeText"];
 
       /// <summary>
       /// reset values from folder and file forms

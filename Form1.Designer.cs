@@ -30,6 +30,8 @@ namespace brf
       private void InitializeComponent()
       {
          this.gbFiles = new System.Windows.Forms.GroupBox();
+         this.btnSelectFolder = new System.Windows.Forms.Button();
+         this.chkbtext = new System.Windows.Forms.CheckBox();
          this.chksubfolders = new System.Windows.Forms.CheckBox();
          this.btnResetFileFolder = new System.Windows.Forms.Button();
          this.label2 = new System.Windows.Forms.Label();
@@ -64,8 +66,6 @@ namespace brf
          this.btnSubmit = new System.Windows.Forms.Button();
          this.lvFinalPrev = new System.Windows.Forms.ListView();
          this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-         this.chkbtext = new System.Windows.Forms.CheckBox();
-         this.btnSelectFolder = new System.Windows.Forms.Button();
          this.gbFiles.SuspendLayout();
          this.gbWhattoReplace.SuspendLayout();
          this.grpbpreviewFileFolders.SuspendLayout();
@@ -96,6 +96,26 @@ namespace brf
          this.gbFiles.TabStop = false;
          this.gbFiles.Text = "Select folder and define file type(s)";
          // 
+         // btnSelectFolder
+         // 
+         this.btnSelectFolder.Location = new System.Drawing.Point(338, 60);
+         this.btnSelectFolder.Name = "btnSelectFolder";
+         this.btnSelectFolder.Size = new System.Drawing.Size(75, 23);
+         this.btnSelectFolder.TabIndex = 19;
+         this.btnSelectFolder.Text = "Select folder";
+         this.btnSelectFolder.UseVisualStyleBackColor = true;
+         this.btnSelectFolder.Click += new System.EventHandler(this.btnSelectFolder_Click);
+         // 
+         // chkbtext
+         // 
+         this.chkbtext.AutoSize = true;
+         this.chkbtext.Location = new System.Drawing.Point(110, 34);
+         this.chkbtext.Name = "chkbtext";
+         this.chkbtext.Size = new System.Drawing.Size(47, 17);
+         this.chkbtext.TabIndex = 18;
+         this.chkbtext.Text = "Text";
+         this.chkbtext.UseVisualStyleBackColor = true;
+         // 
          // chksubfolders
          // 
          this.chksubfolders.AutoSize = true;
@@ -122,26 +142,26 @@ namespace brf
          this.label2.AutoSize = true;
          this.label2.Location = new System.Drawing.Point(251, 39);
          this.label2.Name = "label2";
-         this.label2.Size = new System.Drawing.Size(198, 13);
+         this.label2.Size = new System.Drawing.Size(215, 13);
          this.label2.TabIndex = 15;
-         this.label2.Text = "separate with comma (,) if more than one";
+         this.label2.Text = "separate with comma (sample: *.mp3, *.mp4)";
          // 
          // txtbFileTypes
          // 
-         this.txtbFileTypes.Location = new System.Drawing.Point(454, 39);
+         this.txtbFileTypes.Location = new System.Drawing.Point(478, 39);
          this.txtbFileTypes.Name = "txtbFileTypes";
          this.txtbFileTypes.ReadOnly = true;
-         this.txtbFileTypes.Size = new System.Drawing.Size(137, 20);
+         this.txtbFileTypes.Size = new System.Drawing.Size(113, 20);
          this.txtbFileTypes.TabIndex = 14;
          // 
          // chkbFilesOther
          // 
          this.chkbFilesOther.AutoSize = true;
-         this.chkbFilesOther.Location = new System.Drawing.Point(454, 16);
+         this.chkbFilesOther.Location = new System.Drawing.Point(478, 16);
          this.chkbFilesOther.Name = "chkbFilesOther";
-         this.chkbFilesOther.Size = new System.Drawing.Size(94, 17);
+         this.chkbFilesOther.Size = new System.Drawing.Size(119, 17);
          this.chkbFilesOther.TabIndex = 13;
-         this.chkbFilesOther.Text = "Other (specify)";
+         this.chkbFilesOther.Text = "add other extension";
          this.chkbFilesOther.UseVisualStyleBackColor = true;
          this.chkbFilesOther.CheckedChanged += new System.EventHandler(this.chkbFilesOther_CheckedChanged);
          // 
@@ -414,26 +434,6 @@ namespace brf
          // 
          this.columnHeader2.Text = "";
          this.columnHeader2.Width = 200;
-         // 
-         // chkbtext
-         // 
-         this.chkbtext.AutoSize = true;
-         this.chkbtext.Location = new System.Drawing.Point(110, 34);
-         this.chkbtext.Name = "chkbtext";
-         this.chkbtext.Size = new System.Drawing.Size(47, 17);
-         this.chkbtext.TabIndex = 18;
-         this.chkbtext.Text = "Text";
-         this.chkbtext.UseVisualStyleBackColor = true;
-         // 
-         // btnSelectFolder
-         // 
-         this.btnSelectFolder.Location = new System.Drawing.Point(338, 60);
-         this.btnSelectFolder.Name = "btnSelectFolder";
-         this.btnSelectFolder.Size = new System.Drawing.Size(75, 23);
-         this.btnSelectFolder.TabIndex = 19;
-         this.btnSelectFolder.Text = "Select folder";
-         this.btnSelectFolder.UseVisualStyleBackColor = true;
-         this.btnSelectFolder.Click += new System.EventHandler(this.btnSelectFolder_Click);
          // 
          // frmMain
          // 
