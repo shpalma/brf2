@@ -316,6 +316,12 @@ namespace brf
             lvFilesFolders.Items.Add("N° " + counter.ToString() + " " + System.IO.Path.GetFileName(supportedFile));
          }
 
+         if (counter <= 0)
+         {
+            MessageBox.Show("No supported files found!", "Atention!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            _ = txtbFileTypes.Focus();
+            return;
+         }
          _ = txtReplaceThis.Focus();
       }
 
