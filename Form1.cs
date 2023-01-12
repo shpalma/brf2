@@ -40,22 +40,28 @@ namespace brf
       /// <summary>
       /// reset values from folder and file forms
       /// </summary>
-      private void resetFolderAndFiles()
+      private void ResetFolderAndFiles()
       {
          chkbFilesDocs.Checked = false;
-         chkbFilesImg.Checked = false;
+         chkbFilesZipped.Checked = false;
          chkbFilesAudio.Checked = false;
          chkbFilesVideo.Checked = false;
-         chkbFilesOther.Checked = false;
-         chkbtext.Checked = false;
+         chkbFilesData.Checked = false;
+         chkbFilesDisk.Checked = false;
+         chkbFilesExe.Checked = false;
+         chkbFilesImg.Checked = false;
+         chkbFilesTxt.Checked = false;
          chkbFilesAll.Checked = false;
+         chkbFilesOther.Checked = false;
          chksubfolders.Checked = false;
 
-         txtbFileTypes.Text = string.Empty;
+         //txtbFileTypes.Text = string.Empty;
          txtbSelectedFolder.Text = string.Empty;
 
          globFolder = string.Empty;
-         lvFilesFolders.Clear();
+         lblFolderSelected.Text = "[...]";
+         lvFilesFolders.Items.Clear();
+
       }
 
       /// <summary>
@@ -68,7 +74,7 @@ namespace brf
          txtRegex.Text = string.Empty;
 
          rbjustremove.Checked = false;
-         chkbRegex.Checked = false;
+         chkbFilesRegex.Checked = false;
          chkOpenFE.Checked = false;
 
          lvFinalPrev.Clear();
@@ -81,9 +87,13 @@ namespace brf
 
    }
 
+      /// <summary>
+      /// Enable the option to enter manually what type of files to read
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
       private void chkbFilesOther_CheckedChanged(object sender, EventArgs e)
       {
-         // enable the option to enter manually what type of files to read
          if ((chkbFilesOther.Checked) && String.IsNullOrEmpty(txtbFileTypes.Text))
          {
             txtbFileTypes.ReadOnly = false;
@@ -106,19 +116,28 @@ namespace brf
       {
          int counter = 0;
          string finalName = string.Empty;
+         string filename = string.Empty;
 
+         lvFinalPrev.Items.Clear();
          lvFinalPrev.Scrollable = true;
          lvFinalPrev.View = View.Details;
+         lvFinalPrev.HeaderStyle = ColumnHeaderStyle.None;
+         
+         var items = lvFinalPrev.Items;
 
-         lvFinalPrev.Items.Add("Folder: " + globFolder);
-         lvFinalPrev.Items.Add("------------------------------");
-
-         foreach (FileInfo file in globFileTypes)
+         // get file list from supported file types selected
+         foreach (var supportedFile in Directory.GetFiles(globFolder, "*.*", SearchOption.AllDirectories).Where(s => supportedFiletype.Contains(Path.GetExtension(s).ToLower())))
          {
             counter += 1;
-            finalName = file.Name.Replace(txtReplaceThis.Text, txtReplaceForThis.Text);
-            Console.WriteLine("File Name : {0}", finalName);
-            lvFinalPrev.Items.Add("N° " + counter.ToString() + " " + finalName);
+            filename = string.Empty;
+            finalName = string.Empty;
+
+            filename = System.IO.Path.GetFileName(supportedFile);
+            finalName = filename.Replace(txtReplaceThis.Text, txtReplaceForThis.Text);
+            Console.WriteLine("File Name : {0}", finalName);            
+
+            items.Add(counter.ToString() + " " + finalName.ToString());
+
          }
 
       }
@@ -132,29 +151,31 @@ namespace brf
       {
          int counter = 0;
          string finalName = string.Empty;
+         string filename = string.Empty;
 
          try
          {
-            foreach (FileInfo file in globFileTypes)
+            // look for files
+            foreach (var supportedFile in Directory.GetFiles(globFolder, "*.*", SearchOption.AllDirectories).Where(s => supportedFiletype.Contains(Path.GetExtension(s).ToLower())))
             {
                counter += 1;
-               finalName = file.Name.Replace(txtReplaceThis.Text, txtReplaceForThis.Text);
-               File.Move(globFolder + backslash + file, globFolder + backslash + finalName);
+               filename = string.Empty;
+               finalName = string.Empty;
+
+               filename = System.IO.Path.GetFileName(supportedFile);
+               finalName = filename.Replace(txtReplaceThis.Text, txtReplaceForThis.Text);
+               Console.WriteLine("File Name : {0}", finalName);
+
+               // rename (move) file!!!
+               File.Move(globFolder + backslash + filename, globFolder + backslash + finalName);
+
             }
 
+            // do it open file explorer?
             if (chkOpenFE.Checked)
             {
-               try
-               {
-                  // open folder in file explorer once the proccess it's done
-                  Process.Start(globFolder);
-               }
-               catch (Win32Exception w32Exce)
-               {
-                  //The system wasn't able to execute the task...
-                  Console.WriteLine(w32Exce.Message);
-                  MessageBox.Show("Error to open File Explorer: " + vbCrl + w32Exce.Message.ToString(), "Something went wrong...", MessageBoxButtons.OK, MessageBoxIcon.Error);
-               }
+               // open folder in file explorer once the proccess it's done
+               Process.Start(globFolder);               
             }
 
             MessageBox.Show("The process renamed " + counter.ToString() + " files!" + vbCrl + "...Everything was like a globe!", "Success: files renamed", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -162,11 +183,19 @@ namespace brf
          }
          catch (IOException ioEx)
          {
+            // exception for Directory.GetFiles and File.move objects
             Console.WriteLine(ioEx.Message);
             MessageBox.Show("Error on renaming files: " + vbCrl + ioEx.Message.ToString(), "File system Error:", MessageBoxButtons.OK, MessageBoxIcon.Error);
          }
+         catch (Win32Exception w32Exce)
+         {
+            // exception for Process.Start
+            Console.WriteLine(w32Exce.Message);
+            MessageBox.Show("Error to open File Explorer: " + vbCrl + w32Exce.Message.ToString(), "Something went wrong...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+         }
          catch (Exception ex)
          {
+            // all other type of exceptions
             Console.WriteLine(ex.Message);
             MessageBox.Show("Error on renaming files: " + vbCrl + ex.Message.ToString(), "Other error type: ", MessageBoxButtons.OK, MessageBoxIcon.Error);
          }
@@ -188,7 +217,7 @@ namespace brf
 
       private void btnResetFileFolder_Click(object sender, EventArgs e)
       {
-         resetFolderAndFiles();
+         ResetFolderAndFiles();
       }
 
       private void btnResetWhatTo_Click(object sender, EventArgs e)
@@ -198,7 +227,7 @@ namespace brf
 
       private void btnResetAll_Click(object sender, EventArgs e)
       {
-         resetFolderAndFiles();
+         ResetFolderAndFiles();
          resetWhatandWhere();
 
       }
@@ -214,32 +243,16 @@ namespace brf
          int counter = 0;
          txtbSelectedFolder.Text = string.Empty;
 
-         // This section: gathers information about what file types must look for
-         if ((chkbFilesOther.Checked == true) &&
-              (txtbFileTypes.ReadOnly == false) &&
-              (String.IsNullOrEmpty(txtbFileTypes.Text)))
-         {
-            MessageBox.Show("Write some file type!", "Atention!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            _ = txtbFileTypes.Focus();
-            return;
-         }
-
-         // select folder to work
-         if (fbdFolder.ShowDialog() == DialogResult.OK)
-         {
-            txtbSelectedFolder.Text = fbdFolder.SelectedPath.ToString();
-            globFolder = txtbSelectedFolder.Text;
-         }
-
          supportedFiletype = string.Empty;
-         // What type of files must be included?
+
+         #region What type of files must be included?
          if (chkbFilesDocs.Checked)
             if (string.IsNullOrEmpty(supportedFiletype))
                supportedFiletype = filetypeOffice + ", " + filetypeOfficex;
             else
                supportedFiletype += ", " + filetypeOffice + ", " + filetypeOfficex;
 
-         if (chkbCompressed.Checked)
+         if (chkbFilesZipped.Checked)
             if (string.IsNullOrEmpty(supportedFiletype))
                supportedFiletype += filetypeCompressed; // 
             else
@@ -257,19 +270,19 @@ namespace brf
             else
                supportedFiletype += ", " + filetypeVideo;
 
-         if (chkbData.Checked)
+         if (chkbFilesData.Checked)
             if (string.IsNullOrEmpty(supportedFiletype))
                supportedFiletype += filetypeData; // 
             else
                supportedFiletype += ", " + filetypeVideo;
 
-         if (chkbDisk.Checked)
+         if (chkbFilesDisk.Checked)
             if (string.IsNullOrEmpty(supportedFiletype))
                supportedFiletype += filetypeDisk; // 
             else
                supportedFiletype += ", " + filetypeDisk;
 
-         if (chbExecutable.Checked)
+         if (chkbFilesExe.Checked)
             if (string.IsNullOrEmpty(supportedFiletype))
                supportedFiletype += filetypeExecutable; // 
             else
@@ -281,7 +294,7 @@ namespace brf
             else
                supportedFiletype += ", " + filetypeImage;
 
-         if (chkbtext.Checked)
+         if (chkbFilesTxt.Checked)
             if (string.IsNullOrEmpty(supportedFiletype))
                supportedFiletype = filetypeText;
             else
@@ -292,24 +305,43 @@ namespace brf
                supportedFiletype = filetypeEverythin;
             else
                supportedFiletype += ", " + filetypeEverythin;
+         #endregion
 
+         // evaluate if there's some selected, related to file type
          // check if have any file type to read
          if (string.IsNullOrEmpty(supportedFiletype))
          {
             MessageBox.Show("Select or Write some file type!", "Atention!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            _ = chkbFilesDocs.Focus();
+            return;
+         }
+
+         // This section: gathers information about what file types must look for
+         if ((chkbFilesOther.Checked == true) &&
+              (txtbFileTypes.ReadOnly == false) &&
+              (String.IsNullOrEmpty(txtbFileTypes.Text)))
+         {
+            MessageBox.Show("Write some file type!", "Atention!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             _ = txtbFileTypes.Focus();
             return;
+         }
+
+         // select folder to work
+         if (fbdFolder.ShowDialog() == DialogResult.OK)
+         {
+            txtbSelectedFolder.Text = fbdFolder.SelectedPath.ToString();
+            lblFolderSelected.Text = fbdFolder.SelectedPath.ToString();
+            globFolder = txtbSelectedFolder.Text;
          }
 
          // set up folder 
          DirectoryInfo dir = new DirectoryInfo(globFolder);
          lvFilesFolders.Scrollable = true;
          lvFilesFolders.View = View.Details;
-         lvFilesFolders.Items.Add("Folder: " + globFolder);
-         lvFilesFolders.Items.Add("------------------------------");
+         lvFilesFolders.HeaderStyle = ColumnHeaderStyle.None;
 
          // get file list from supported file types selected
-         foreach (string supportedFile in Directory.GetFiles(globFolder, "*.*", SearchOption.AllDirectories).Where(s => supportedFiletype.Contains(Path.GetExtension(s).ToLower())))
+         foreach (var supportedFile in Directory.GetFiles(globFolder, "*.*", SearchOption.AllDirectories).Where(s => supportedFiletype.Contains(Path.GetExtension(s).ToLower())))
          {
             counter += 1;
             Console.WriteLine("File Name : {0}", System.IO.Path.GetFileName(supportedFile));
@@ -335,14 +367,15 @@ namespace brf
          if (chkbFilesAll.Checked)
          {
             chkbFilesDocs.Checked = false;
-            chkbCompressed.Checked = false;
+            chkbFilesZipped.Checked = false;
             chkbFilesAudio.Checked = false;
             chkbFilesVideo.Checked = false;
-            chkbData.Checked = false;
-            chkbDisk.Checked = false;
-            chbExecutable.Checked = false;
+            chkbFilesData.Checked = false;
+            chkbFilesDisk.Checked = false;
+            chkbFilesExe.Checked = false;
             chkbFilesImg.Checked = false;
-            chkbtext.Checked = false;
+            chkbFilesTxt.Checked = false;
+            //chkbFilesAll.Checked = false;
             chkbFilesOther.Checked = false;
          }
       }
