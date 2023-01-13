@@ -55,9 +55,6 @@ namespace brf
          chkbFilesOther.Checked = false;
          chksubfolders.Checked = false;
 
-         //txtbFileTypes.Text = string.Empty;
-         txtbSelectedFolder.Text = string.Empty;
-
          globFolder = string.Empty;
          lblFolderSelected.Text = "[...]";
          lvFilesFolders.Items.Clear();
@@ -69,11 +66,13 @@ namespace brf
       /// </summary>
       private void resetWhatandWhere()
       {
+         
          txtReplaceThis.Text = string.Empty;
          txtReplaceForThis.Text = string.Empty;
-         txtRegex.Text = string.Empty;
 
          rbjustremove.Checked = false;
+         rbregexWhatAndWhere.Checked = false;
+
          chkbFilesRegex.Checked = false;
          chkOpenFE.Checked = false;
 
@@ -241,7 +240,6 @@ namespace brf
       {
          FolderBrowserDialog fbdResult = new FolderBrowserDialog();
          int counter = 0;
-         txtbSelectedFolder.Text = string.Empty;
 
          supportedFiletype = string.Empty;
 
@@ -329,10 +327,12 @@ namespace brf
          // select folder to work
          if (fbdFolder.ShowDialog() == DialogResult.OK)
          {
-            txtbSelectedFolder.Text = fbdFolder.SelectedPath.ToString();
             lblFolderSelected.Text = fbdFolder.SelectedPath.ToString();
-            globFolder = txtbSelectedFolder.Text;
+            globFolder = fbdFolder.SelectedPath.ToString();
          }
+
+
+         lvFilesFolders.Items.Clear();
 
          // set up folder 
          DirectoryInfo dir = new DirectoryInfo(globFolder);
@@ -378,6 +378,36 @@ namespace brf
             //chkbFilesAll.Checked = false;
             chkbFilesOther.Checked = false;
          }
+      }
+
+      private void rbregexWhatAndWhere_CheckedChanged(object sender, EventArgs e)
+      {
+         if (rbregexWhatAndWhere.Checked)
+         {
+            txtbRegexWAndW.ReadOnly = false;
+            rbregexWhatAndWhere.Focus();
+         }
+         else
+         {
+            txtbRegexWAndW.Text = string.Empty;
+            txtbRegexWAndW.ReadOnly = true;
+         }
+
+      }
+
+      private void toolStripStatusLabel1_Click(object sender, EventArgs e)
+      {
+
+      }
+
+      private void chkbFilesDocs_MouseHover(object sender, EventArgs e)
+      {
+         statusStrip.Text = "docs!";
+      }
+
+      private void chkbFilesDocs_MouseLeave(object sender, EventArgs e)
+      {
+         statusStrip.Text = string.Empty;
       }
    }
 }
