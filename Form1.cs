@@ -162,12 +162,27 @@ namespace brf
                finalName = string.Empty;
 
                filename = System.IO.Path.GetFileName(supportedFile);
+               statusStrip.Text = "...getting supported files.";
+
                finalName = filename.Replace(txtReplaceThis.Text, txtReplaceForThis.Text);
+               statusStrip.Text = "...getting file name.";
+
                Console.WriteLine("File Name : {0}", finalName);
 
                // rename (move) file!!!
-               File.Move(globFolder + backslash + filename, globFolder + backslash + finalName);
+               string originalFileName = string.Empty;
+               string newFileName = string.Empty;
 
+               // determine path and file name: original
+               originalFileName = globFolder + backslash + filename;
+               // determine path and file name: new
+               newFileName = globFolder + backslash + finalName;
+
+               if (originalFileName != newFileName)
+               {
+                  File.Move(originalFileName, newFileName);
+                  statusStrip.Text = "...renaming file.";
+               }
             }
 
             // do it open file explorer?
