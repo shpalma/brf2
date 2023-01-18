@@ -85,8 +85,7 @@ namespace brf
       private void frmMain_Load(object sender, EventArgs e)
       {
          _ = txtbFileTypes.Focus();
-
-   }
+      }
 
       /// <summary>
       /// Enable the option to enter manually what type of files to read
@@ -118,13 +117,12 @@ namespace brf
          int counter = 0;
          string finalName = string.Empty;
          string filename = string.Empty;
+         string whatToFind = string.Empty;
 
-         lvFinalPrev.Clear();
+         lvFinalPrev.Items.Clear();
          lvFinalPrev.Scrollable = true;
          lvFinalPrev.View = View.Details;
          lvFinalPrev.HeaderStyle = ColumnHeaderStyle.None;
-
-         var items = lvFinalPrev.Items;
 
          // get file list from supported file types selected
          foreach (var supportedFile in Directory.GetFiles(globFolder, "*.*", SearchOptionUserType).Where(s => supportedFiletype.Contains(Path.GetExtension(s).ToLower())))
@@ -133,18 +131,20 @@ namespace brf
             filename = string.Empty;
             finalName = string.Empty;
 
-            if (supportedFile.ToLower().Contains(txtReplaceThis.Text.ToLower())) {
-               filename = System.IO.Path.GetFileName(supportedFile);
-               finalName = filename.Replace(txtReplaceThis.Text, txtReplaceForThis.Text);
-               Console.WriteLine("File Name : {0}", finalName);
+            filename = System.IO.Path.GetFileName(supportedFile).ToLower();
+            whatToFind = txtReplaceThis.Text.ToLower();
 
-               lvFinalPrev.Items.Add("N° " + counter.ToString() + " " + finalName);
-            }
+            //finalName = getBetween(filename, whatToFind, )
 
 
          }
 
-         //lvFinalPrev.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+         if (counter >= 1)
+         {
+            lvFinalPrev.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+         }
+
+         SaveLogToFile("", "Component.Testing.CRUD", "Previsualizando", "uno:asdasd;dos:dfgdfgdfg;tres:dfgdfgd");
 
       }
 
@@ -362,9 +362,10 @@ namespace brf
             lblFolderSelected.Text = fbdFolder.SelectedPath.ToString();
             globFolder = fbdFolder.SelectedPath.ToString();
          }
+         else
+            return;
 
-
-         lvFilesFolders.Clear();
+         lvFilesFolders.Items.Clear();
 
          // set up folder 
          DirectoryInfo dir = new DirectoryInfo(globFolder);
@@ -377,7 +378,7 @@ namespace brf
          {
             counter += 1;
             Console.WriteLine("File Name : {0}", System.IO.Path.GetFileName(supportedFile));
-            lvFilesFolders.Items.Add("N° " + counter.ToString() + " " + System.IO.Path.GetFileName(supportedFile));
+            lvFilesFolders.Items.Add(System.IO.Path.GetFileName(supportedFile));
          }
 
          if (counter <= 0)
@@ -387,10 +388,13 @@ namespace brf
             return;
          }
          else
-         { 
-            //lvFilesFolders.AutoResizeColumns (ColumnHeaderAutoResizeStyle.ColumnContent);
-         _ = txtReplaceThis.Focus();
+         {
+            lblFolderSelected.Text += " (" + counter.ToString() + " files found)";
+            lvFilesFolders.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+            _ = txtReplaceThis.Focus();
          }
+
+         SaveLogToFile("", "NONE", "Acción: Determina carpeta y archivos a buscar.", "param 01: 12345;param 2: 3456456;param 3: 5675675;");
       }
 
       private void lblwtr_Click(object sender, EventArgs e)
@@ -416,21 +420,6 @@ namespace brf
          }
       }
 
-      private void rbregexWhatAndWhere_CheckedChanged(object sender, EventArgs e)
-      {
-         if (rbregexWhatAndWhere.Checked)
-         {
-            txtbRegexWAndW.ReadOnly = false;
-            rbregexWhatAndWhere.Focus();
-         }
-         else
-         {
-            txtbRegexWAndW.Text = string.Empty;
-            txtbRegexWAndW.ReadOnly = true;
-         }
-
-      }
-
       private void toolStripStatusLabel1_Click(object sender, EventArgs e)
       {
 
@@ -444,6 +433,143 @@ namespace brf
       private void chkbFilesDocs_MouseLeave(object sender, EventArgs e)
       {
          statusStrip.Text = string.Empty;
+      }
+
+      private void rdbReplaceThis_CheckedChanged(object sender, EventArgs e)
+      {
+         if (rdbReplaceThis.Checked) {
+            txtReplaceThis.Enabled = true;
+            txtReplaceForThis.Enabled = true;
+
+            rbregexWhatAndWhere.Checked = false;
+            rbjustremove.Checked = false;
+
+            txtReplaceThis.Focus();
+
+          }
+         else {
+            txtReplaceThis.Enabled = false;
+            txtReplaceForThis.Enabled = false;
+         }
+      }
+
+      private void rbregexWhatAndWhere_CheckedChanged(object sender, EventArgs e)
+      {
+         if (rbregexWhatAndWhere.Checked)
+         {
+            rdbReplaceThis.Checked = false;
+            rbjustremove.Checked = false;
+
+            txtbRegexWAndW.ReadOnly = false;
+            rbregexWhatAndWhere.Focus();
+         }
+         else
+         {
+            txtbRegexWAndW.Text = string.Empty;
+            txtbRegexWAndW.ReadOnly = true;
+         }
+
+      }
+
+      private void rbjustremove_CheckedChanged(object sender, EventArgs e)
+      {
+         if (rbjustremove.Checked)
+         {
+
+            rdbReplaceThis.Checked = false;
+            rbregexWhatAndWhere.Checked = false;
+
+            txtJustDropIt.Enabled = true;
+            txtJustDropIt.Focus();
+         }
+         else
+         {
+            txtJustDropIt.Enabled = false;
+         }
+      }
+
+      
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="strSource"></param>
+      /// <param name="strStart"></param>
+      /// <param name="strEnd"></param>
+      /// <returns></returns>
+      public static string getBetween(string strSource, string strStart, string strEnd)
+      {
+         //from Stackoverflow
+         // https://stackoverflow.com/questions/10709821/find-text-in-string-with-c-sharp
+         if (strSource.Contains(strStart) && strSource.Contains(strEnd))
+         {
+            int Start, End;
+            Start = strSource.IndexOf(strStart, 0) + strStart.Length;
+            End = strSource.IndexOf(strEnd, Start);
+            return strSource.Substring(Start, End - Start);
+         }
+
+         return "";
+      }
+
+      /// <summary>
+      /// Save log to file
+      /// </summary>
+      /// <param name="pathAndFileLog">path and file name log</param>
+      /// <param name="componentName">Componente name used (Send "NONE" to avoid this parameter)</param>
+      /// <param name="isAction">What is doing this action (Describe)</param>
+      /// <param name="thisParams">List of what to print with semicolon separator. (param1:value1;param2:value2...)</param>
+      public void SaveLogToFile(string pathAndFileLog, string componentName, string isAction, string thisParams)
+      {
+         System.Text.StringBuilder sb = new System.Text.StringBuilder();
+         string[] splitedParams;
+         string printToFile = "";
+         int counter = 0;
+
+         printToFile += "\r\n";
+         printToFile += "\r\n";
+         printToFile = DateTime.Now.ToString("yyyyMMddhhmmss") + " ********************************************";
+         printToFile += "\r\n";
+         
+         if (componentName != "NONE" )
+         {
+            printToFile += DateTime.Now.ToString("yyyyMMddhhmmss") + " * " + componentName;
+            printToFile += "\r\n";
+         }
+
+         printToFile += DateTime.Now.ToString("yyyyMMddhhmmss") + " ********************************************";
+         printToFile += "\r\n";
+         printToFile += DateTime.Now.ToString("yyyyMMddhhmmss") + " * " + isAction;
+         printToFile += "\r\n";
+         printToFile += DateTime.Now.ToString("yyyyMMddhhmmss") + " * " + "Parameters: ";
+         printToFile += "\r\n";
+
+         splitedParams = thisParams.Split(';');
+
+         foreach (string valpar in splitedParams)
+         {
+            counter += 1;
+            printToFile += DateTime.Now.ToString("yyyyMMddhhmmss") + " * " + valpar;
+            printToFile += "\r\n";
+         }
+
+         if (string.IsNullOrEmpty(pathAndFileLog))
+         {
+            
+            FileInfo fileInfo = new FileInfo("c:\\skidata\\logs\\");
+
+            if (!fileInfo.Exists)
+               Directory.CreateDirectory(fileInfo.Directory.FullName);
+            
+            pathAndFileLog += "c:\\skidata\\logs\\" + DateTime.Now.ToString("yyyyMMdd") + ".log";
+            sb.Append(printToFile);
+            File.AppendAllText(pathAndFileLog, sb.ToString());
+         }
+         else
+         { 
+            File.AppendAllText(pathAndFileLog, printToFile + Environment.NewLine);
+         }
+
+         sb.Clear();
       }
    }
 }

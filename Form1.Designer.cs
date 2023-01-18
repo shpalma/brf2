@@ -61,7 +61,6 @@ namespace brf
          this.txtReplaceForThis = new System.Windows.Forms.TextBox();
          this.lblwtrf = new System.Windows.Forms.Label();
          this.txtReplaceThis = new System.Windows.Forms.TextBox();
-         this.lblwtr = new System.Windows.Forms.Label();
          this.grpbpreviewFileFolders = new System.Windows.Forms.GroupBox();
          this.lvFilesFolders = new System.Windows.Forms.ListView();
          this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -74,6 +73,8 @@ namespace brf
          this.statusStrip = new System.Windows.Forms.StatusStrip();
          this.toolStrip = new System.Windows.Forms.ToolStripStatusLabel();
          this.ProgressBar = new System.Windows.Forms.ToolStripProgressBar();
+         this.rdbReplaceThis = new System.Windows.Forms.RadioButton();
+         this.txtJustDropIt = new System.Windows.Forms.TextBox();
          this.gbFiles.SuspendLayout();
          this.gbWhattoReplace.SuspendLayout();
          this.grpbpreviewFileFolders.SuspendLayout();
@@ -133,6 +134,7 @@ namespace brf
          // 
          // txtRegex
          // 
+         this.txtRegex.Enabled = false;
          this.txtRegex.Location = new System.Drawing.Point(360, 83);
          this.txtRegex.Name = "txtRegex";
          this.txtRegex.ReadOnly = true;
@@ -321,6 +323,8 @@ namespace brf
          // 
          // gbWhattoReplace
          // 
+         this.gbWhattoReplace.Controls.Add(this.txtJustDropIt);
+         this.gbWhattoReplace.Controls.Add(this.rdbReplaceThis);
          this.gbWhattoReplace.Controls.Add(this.rbregexWhatAndWhere);
          this.gbWhattoReplace.Controls.Add(this.txtbRegexWAndW);
          this.gbWhattoReplace.Controls.Add(this.btnPreview);
@@ -329,7 +333,6 @@ namespace brf
          this.gbWhattoReplace.Controls.Add(this.txtReplaceForThis);
          this.gbWhattoReplace.Controls.Add(this.lblwtrf);
          this.gbWhattoReplace.Controls.Add(this.txtReplaceThis);
-         this.gbWhattoReplace.Controls.Add(this.lblwtr);
          this.gbWhattoReplace.Location = new System.Drawing.Point(9, 279);
          this.gbWhattoReplace.Name = "gbWhattoReplace";
          this.gbWhattoReplace.Size = new System.Drawing.Size(603, 89);
@@ -340,7 +343,8 @@ namespace brf
          // rbregexWhatAndWhere
          // 
          this.rbregexWhatAndWhere.AutoSize = true;
-         this.rbregexWhatAndWhere.Location = new System.Drawing.Point(13, 46);
+         this.rbregexWhatAndWhere.Enabled = false;
+         this.rbregexWhatAndWhere.Location = new System.Drawing.Point(204, 22);
          this.rbregexWhatAndWhere.Name = "rbregexWhatAndWhere";
          this.rbregexWhatAndWhere.Size = new System.Drawing.Size(56, 17);
          this.rbregexWhatAndWhere.TabIndex = 123;
@@ -351,10 +355,10 @@ namespace brf
          // 
          // txtbRegexWAndW
          // 
-         this.txtbRegexWAndW.Location = new System.Drawing.Point(92, 46);
+         this.txtbRegexWAndW.Location = new System.Drawing.Point(293, 20);
          this.txtbRegexWAndW.Name = "txtbRegexWAndW";
          this.txtbRegexWAndW.ReadOnly = true;
-         this.txtbRegexWAndW.Size = new System.Drawing.Size(210, 20);
+         this.txtbRegexWAndW.Size = new System.Drawing.Size(81, 20);
          this.txtbRegexWAndW.TabIndex = 122;
          // 
          // btnPreview
@@ -380,17 +384,19 @@ namespace brf
          // rbjustremove
          // 
          this.rbjustremove.AutoSize = true;
-         this.rbjustremove.Location = new System.Drawing.Point(308, 20);
+         this.rbjustremove.Location = new System.Drawing.Point(203, 44);
          this.rbjustremove.Name = "rbjustremove";
          this.rbjustremove.Size = new System.Drawing.Size(79, 17);
          this.rbjustremove.TabIndex = 110;
          this.rbjustremove.TabStop = true;
          this.rbjustremove.Text = "Just drop it!";
          this.rbjustremove.UseVisualStyleBackColor = true;
+         this.rbjustremove.CheckedChanged += new System.EventHandler(this.rbjustremove_CheckedChanged);
          // 
          // txtReplaceForThis
          // 
-         this.txtReplaceForThis.Location = new System.Drawing.Point(233, 19);
+         this.txtReplaceForThis.Enabled = false;
+         this.txtReplaceForThis.Location = new System.Drawing.Point(102, 41);
          this.txtReplaceForThis.Name = "txtReplaceForThis";
          this.txtReplaceForThis.Size = new System.Drawing.Size(69, 20);
          this.txtReplaceForThis.TabIndex = 105;
@@ -398,7 +404,7 @@ namespace brf
          // lblwtrf
          // 
          this.lblwtrf.AutoSize = true;
-         this.lblwtrf.Location = new System.Drawing.Point(177, 23);
+         this.lblwtrf.Location = new System.Drawing.Point(46, 40);
          this.lblwtrf.Name = "lblwtrf";
          this.lblwtrf.Size = new System.Drawing.Size(50, 13);
          this.lblwtrf.TabIndex = 2;
@@ -406,20 +412,11 @@ namespace brf
          // 
          // txtReplaceThis
          // 
-         this.txtReplaceThis.Location = new System.Drawing.Point(92, 20);
+         this.txtReplaceThis.Enabled = false;
+         this.txtReplaceThis.Location = new System.Drawing.Point(102, 19);
          this.txtReplaceThis.Name = "txtReplaceThis";
          this.txtReplaceThis.Size = new System.Drawing.Size(69, 20);
          this.txtReplaceThis.TabIndex = 100;
-         // 
-         // lblwtr
-         // 
-         this.lblwtr.AutoSize = true;
-         this.lblwtr.Location = new System.Drawing.Point(10, 23);
-         this.lblwtr.Name = "lblwtr";
-         this.lblwtr.Size = new System.Drawing.Size(76, 13);
-         this.lblwtr.TabIndex = 0;
-         this.lblwtr.Text = "Replace This: ";
-         this.lblwtr.Click += new System.EventHandler(this.lblwtr_Click);
          // 
          // grpbpreviewFileFolders
          // 
@@ -435,8 +432,12 @@ namespace brf
          // 
          this.lvFilesFolders.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1});
+         this.lvFilesFolders.FullRowSelect = true;
+         this.lvFilesFolders.GridLines = true;
+         this.lvFilesFolders.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
          this.lvFilesFolders.HideSelection = false;
          this.lvFilesFolders.Location = new System.Drawing.Point(7, 19);
+         this.lvFilesFolders.MultiSelect = false;
          this.lvFilesFolders.Name = "lvFilesFolders";
          this.lvFilesFolders.Size = new System.Drawing.Size(585, 82);
          this.lvFilesFolders.TabIndex = 0;
@@ -465,9 +466,9 @@ namespace brf
          this.chkOpenFE.AutoSize = true;
          this.chkOpenFE.Location = new System.Drawing.Point(6, 107);
          this.chkOpenFE.Name = "chkOpenFE";
-         this.chkOpenFE.Size = new System.Drawing.Size(211, 17);
+         this.chkOpenFE.Size = new System.Drawing.Size(171, 17);
          this.chkOpenFE.TabIndex = 125;
-         this.chkOpenFE.Text = "Open folder in File Explorer when done!";
+         this.chkOpenFE.Text = "Open File Explorer when done!";
          this.chkOpenFE.UseVisualStyleBackColor = true;
          // 
          // btnResetAll
@@ -494,8 +495,12 @@ namespace brf
          // 
          this.lvFinalPrev.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader2});
+         this.lvFinalPrev.FullRowSelect = true;
+         this.lvFinalPrev.GridLines = true;
+         this.lvFinalPrev.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
          this.lvFinalPrev.HideSelection = false;
          this.lvFinalPrev.Location = new System.Drawing.Point(6, 19);
+         this.lvFinalPrev.MultiSelect = false;
          this.lvFinalPrev.Name = "lvFinalPrev";
          this.lvFinalPrev.Size = new System.Drawing.Size(585, 82);
          this.lvFinalPrev.TabIndex = 0;
@@ -526,6 +531,26 @@ namespace brf
          // 
          this.ProgressBar.Name = "ProgressBar";
          this.ProgressBar.Size = new System.Drawing.Size(100, 16);
+         // 
+         // rdbReplaceThis
+         // 
+         this.rdbReplaceThis.AutoSize = true;
+         this.rdbReplaceThis.Location = new System.Drawing.Point(13, 20);
+         this.rdbReplaceThis.Name = "rdbReplaceThis";
+         this.rdbReplaceThis.Size = new System.Drawing.Size(84, 17);
+         this.rdbReplaceThis.TabIndex = 124;
+         this.rdbReplaceThis.TabStop = true;
+         this.rdbReplaceThis.Text = "Replace this";
+         this.rdbReplaceThis.UseVisualStyleBackColor = true;
+         this.rdbReplaceThis.CheckedChanged += new System.EventHandler(this.rdbReplaceThis_CheckedChanged);
+         // 
+         // txtJustDropIt
+         // 
+         this.txtJustDropIt.Enabled = false;
+         this.txtJustDropIt.Location = new System.Drawing.Point(293, 43);
+         this.txtJustDropIt.Name = "txtJustDropIt";
+         this.txtJustDropIt.Size = new System.Drawing.Size(81, 20);
+         this.txtJustDropIt.TabIndex = 125;
          // 
          // frmMain
          // 
@@ -580,7 +605,6 @@ namespace brf
       private System.Windows.Forms.TextBox txtReplaceForThis;
       private System.Windows.Forms.Label lblwtrf;
       private System.Windows.Forms.TextBox txtReplaceThis;
-      private System.Windows.Forms.Label lblwtr;
       private System.Windows.Forms.Button btnResetFileFolder;
       private System.Windows.Forms.Button btnResetWhatTo;
       private System.Windows.Forms.GroupBox grpbFinalpreview;
@@ -606,6 +630,8 @@ namespace brf
       private System.Windows.Forms.TextBox txtbRegexWAndW;
       private System.Windows.Forms.ToolStripStatusLabel toolStrip;
       private System.Windows.Forms.ToolStripProgressBar ProgressBar;
+      private System.Windows.Forms.TextBox txtJustDropIt;
+      private System.Windows.Forms.RadioButton rdbReplaceThis;
    }
 }
 

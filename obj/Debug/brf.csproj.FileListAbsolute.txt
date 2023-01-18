@@ -1,13 +1,3 @@
-C:\-- smid\desaTest\01 BulkRenameFiles\brf\bin\Debug\brf.exe.config
-C:\-- smid\desaTest\01 BulkRenameFiles\brf\bin\Debug\brf.exe
-C:\-- smid\desaTest\01 BulkRenameFiles\brf\bin\Debug\brf.pdb
-C:\-- smid\desaTest\01 BulkRenameFiles\brf\obj\Debug\brf.frmMain.resources
-C:\-- smid\desaTest\01 BulkRenameFiles\brf\obj\Debug\brf.Properties.Resources.resources
-C:\-- smid\desaTest\01 BulkRenameFiles\brf\obj\Debug\brf.csproj.GenerateResource.cache
-C:\-- smid\desaTest\01 BulkRenameFiles\brf\obj\Debug\brf.csproj.CoreCompileInputs.cache
-C:\-- smid\desaTest\01 BulkRenameFiles\brf\obj\Debug\brf.exe
-C:\-- smid\desaTest\01 BulkRenameFiles\brf\obj\Debug\brf.pdb
-C:\-- smid\desaTest\01 BulkRenameFiles\brf\obj\Debug\brf.csproj.AssemblyReference.cache
 D:\-- Smid\Dev\GitHub\brf2\bin\Debug\brf.exe.config
 D:\-- Smid\Dev\GitHub\brf2\bin\Debug\brf.exe
 D:\-- Smid\Dev\GitHub\brf2\bin\Debug\brf.pdb
@@ -19,3 +9,12 @@ D:\-- Smid\Dev\GitHub\brf2\obj\Debug\brf.csproj.GenerateResource.cache
 D:\-- Smid\Dev\GitHub\brf2\obj\Debug\brf.csproj.CoreCompileInputs.cache
 D:\-- Smid\Dev\GitHub\brf2\obj\Debug\brf.exe
 D:\-- Smid\Dev\GitHub\brf2\obj\Debug\brf.pdb
+C:\-- smid\desaTest\01 BulkRenameFiles\brf\bin\Debug\brf.exe.config
+C:\-- smid\desaTest\01 BulkRenameFiles\brf\bin\Debug\brf.exe
+C:\-- smid\desaTest\01 BulkRenameFiles\brf\bin\Debug\brf.pdb
+C:\-- smid\desaTest\01 BulkRenameFiles\brf\obj\Debug\brf.frmMain.resources
+C:\-- smid\desaTest\01 BulkRenameFiles\brf\obj\Debug\brf.Properties.Resources.resources
+C:\-- smid\desaTest\01 BulkRenameFiles\brf\obj\Debug\brf.csproj.GenerateResource.cache
+C:\-- smid\desaTest\01 BulkRenameFiles\brf\obj\Debug\brf.csproj.CoreCompileInputs.cache
+C:\-- smid\desaTest\01 BulkRenameFiles\brf\obj\Debug\brf.exe
+C:\-- smid\desaTest\01 BulkRenameFiles\brf\obj\Debug\brf.pdb
