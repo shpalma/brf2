@@ -15,6 +15,7 @@ namespace brf
          InitializeComponent();
       }
 
+      #region var section
       // public vars
       public string globFolder;
       public FileInfo[] globFileTypes;
@@ -36,6 +37,7 @@ namespace brf
       public string filetypeText = ConfigurationManager.AppSettings["filetypeText"];
       public string filetypeEverythin = ConfigurationManager.AppSettings["filetypeEverythin"];
       public string supportedFiletype;
+      #endregion
 
       /// <summary>
       /// reset values from folder and file forms
@@ -117,27 +119,32 @@ namespace brf
          string finalName = string.Empty;
          string filename = string.Empty;
 
-         lvFinalPrev.Items.Clear();
+         lvFinalPrev.Clear();
          lvFinalPrev.Scrollable = true;
          lvFinalPrev.View = View.Details;
          lvFinalPrev.HeaderStyle = ColumnHeaderStyle.None;
-         
+
          var items = lvFinalPrev.Items;
 
          // get file list from supported file types selected
-         foreach (var supportedFile in Directory.GetFiles(globFolder, "*.*", SearchOption.AllDirectories).Where(s => supportedFiletype.Contains(Path.GetExtension(s).ToLower())))
+         foreach (var supportedFile in Directory.GetFiles(globFolder, "*.*", SearchOptionUserType).Where(s => supportedFiletype.Contains(Path.GetExtension(s).ToLower())))
          {
             counter += 1;
             filename = string.Empty;
             finalName = string.Empty;
 
-            filename = System.IO.Path.GetFileName(supportedFile);
-            finalName = filename.Replace(txtReplaceThis.Text, txtReplaceForThis.Text);
-            Console.WriteLine("File Name : {0}", finalName);            
+            if (supportedFile.ToLower().Contains(txtReplaceThis.Text.ToLower())) {
+               filename = System.IO.Path.GetFileName(supportedFile);
+               finalName = filename.Replace(txtReplaceThis.Text, txtReplaceForThis.Text);
+               Console.WriteLine("File Name : {0}", finalName);
 
-            items.Add(counter.ToString() + " " + finalName.ToString());
+               lvFinalPrev.Items.Add("N° " + counter.ToString() + " " + finalName);
+            }
+
 
          }
+
+         //lvFinalPrev.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
 
       }
 
@@ -155,34 +162,42 @@ namespace brf
          try
          {
             // look for files
-            foreach (var supportedFile in Directory.GetFiles(globFolder, "*.*", SearchOption.AllDirectories).Where(s => supportedFiletype.Contains(Path.GetExtension(s).ToLower())))
+            foreach (var supportedFile in Directory.GetFiles(globFolder, "*.*", SearchOptionUserType).Where(s => supportedFiletype.Contains(Path.GetExtension(s).ToLower())))
             {
-               counter += 1;
-               filename = string.Empty;
-               finalName = string.Empty;
-
-               filename = System.IO.Path.GetFileName(supportedFile);
-               statusStrip.Text = "...getting supported files.";
-
-               finalName = filename.Replace(txtReplaceThis.Text, txtReplaceForThis.Text);
-               statusStrip.Text = "...getting file name.";
-
-               Console.WriteLine("File Name : {0}", finalName);
-
-               // rename (move) file!!!
-               string originalFileName = string.Empty;
-               string newFileName = string.Empty;
-
-               // determine path and file name: original
-               originalFileName = globFolder + backslash + filename;
-               // determine path and file name: new
-               newFileName = globFolder + backslash + finalName;
-
-               if (originalFileName != newFileName)
+               if (supportedFile.ToLower().Contains(txtReplaceThis.Text.ToLower()))
                {
-                  File.Move(originalFileName, newFileName);
-                  statusStrip.Text = "...renaming file.";
-               }
+                  counter += 1;
+                  filename = string.Empty;
+                  finalName = string.Empty;
+
+                  filename = System.IO.Path.GetFileName(supportedFile);
+                  statusStrip.Text = "...getting supported files.";
+
+                  finalName = filename.ToLower().Replace(txtReplaceThis.Text.ToLower(), txtReplaceForThis.Text.ToLower());
+                  statusStrip.Text = "...getting file name.";
+
+                  Console.WriteLine("File Name : {0}", finalName);
+
+                  // rename (move) file!!!
+                  string originalFileName = string.Empty;
+                  string newFileName = string.Empty;
+
+                  // determine path and file name: original
+                  originalFileName = globFolder + backslash + filename;
+                  // determine path and file name: new
+                  newFileName = globFolder + backslash + finalName;
+
+                  // exist file?
+                  if (File.Exists(originalFileName))
+                  {
+                     // jusp procces if the file has the same name
+                     if (originalFileName != newFileName)
+                     {
+                        File.Move(originalFileName, newFileName);
+                        statusStrip.Text = "...renaming file.";
+                     }
+                  }
+               }               
             }
 
             // do it open file explorer?
@@ -223,6 +238,7 @@ namespace brf
       /// <param name="e"></param>
       private void chksubfolders_CheckedChanged(object sender, EventArgs e)
       {
+         
          if (chksubfolders.Enabled)
             SearchOptionUserType = SearchOption.AllDirectories;
          else
@@ -320,7 +336,7 @@ namespace brf
                supportedFiletype += ", " + filetypeEverythin;
          #endregion
 
-         // evaluate if there's some selected, related to file type
+         #region evaluate if there's some selected, related to file type
          // check if have any file type to read
          if (string.IsNullOrEmpty(supportedFiletype))
          {
@@ -338,6 +354,7 @@ namespace brf
             _ = txtbFileTypes.Focus();
             return;
          }
+         #endregion
 
          // select folder to work
          if (fbdFolder.ShowDialog() == DialogResult.OK)
@@ -347,7 +364,7 @@ namespace brf
          }
 
 
-         lvFilesFolders.Items.Clear();
+         lvFilesFolders.Clear();
 
          // set up folder 
          DirectoryInfo dir = new DirectoryInfo(globFolder);
@@ -356,7 +373,7 @@ namespace brf
          lvFilesFolders.HeaderStyle = ColumnHeaderStyle.None;
 
          // get file list from supported file types selected
-         foreach (var supportedFile in Directory.GetFiles(globFolder, "*.*", SearchOption.AllDirectories).Where(s => supportedFiletype.Contains(Path.GetExtension(s).ToLower())))
+         foreach (var supportedFile in Directory.GetFiles(globFolder, "*.*", SearchOptionUserType).Where(s => supportedFiletype.Contains(Path.GetExtension(s).ToLower())))
          {
             counter += 1;
             Console.WriteLine("File Name : {0}", System.IO.Path.GetFileName(supportedFile));
@@ -369,7 +386,11 @@ namespace brf
             _ = txtbFileTypes.Focus();
             return;
          }
+         else
+         { 
+            //lvFilesFolders.AutoResizeColumns (ColumnHeaderAutoResizeStyle.ColumnContent);
          _ = txtReplaceThis.Focus();
+         }
       }
 
       private void lblwtr_Click(object sender, EventArgs e)
