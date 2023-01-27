@@ -57,6 +57,8 @@ namespace brf
          chkbFilesOther.Checked = false;
          chksubfolders.Checked = false;
 
+         chksubfolders.Enabled = true;
+
          globFolder = string.Empty;
          lblFolderSelected.Text = "[...]";
          lvFilesFolders.Items.Clear();
@@ -118,6 +120,7 @@ namespace brf
          string finalName = string.Empty;
          string filename = string.Empty;
          string whatToFind = string.Empty;
+         string replaceForThis = string.Empty;
 
          lvFinalPrev.Items.Clear();
          lvFinalPrev.Scrollable = true;
@@ -134,8 +137,16 @@ namespace brf
             filename = System.IO.Path.GetFileName(supportedFile).ToLower();
             whatToFind = txtReplaceThis.Text.ToLower();
 
-            //finalName = getBetween(filename, whatToFind, )
+            if (filename.Contains(whatToFind))
+            {
+               counter += 1;
 
+               replaceForThis = txtReplaceForThis.Text;
+               finalName = filename.Replace(whatToFind, replaceForThis);
+
+               Console.WriteLine("File Name : {0}", System.IO.Path.GetFileName(finalName));
+               lvFinalPrev.Items.Add(finalName);
+            }
 
          }
 
@@ -144,7 +155,7 @@ namespace brf
             lvFinalPrev.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
          }
 
-         SaveLogToFile("", "Component.Testing.CRUD", "Previsualizando", "uno:asdasd;dos:dfgdfgdfg;tres:dfgdfgd");
+         //SaveLogToFile("", "Component.Testing.CRUD", "Previsualizando", "uno:asdasd;dos:dfgdfgdfg;tres:dfgdfgd");
 
       }
 
@@ -263,18 +274,11 @@ namespace brf
       }
 
       /// <summary>
-      /// main process
+      /// Determine what type of file need to look for
       /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
-      private void btnSelectFolder_Click(object sender, EventArgs e)
+      /// <returns>string with the type of files to look for</returns>
+      private string WhatTypeOfFiles()
       {
-         FolderBrowserDialog fbdResult = new FolderBrowserDialog();
-         int counter = 0;
-
-         supportedFiletype = string.Empty;
-
-         #region What type of files must be included?
          if (chkbFilesDocs.Checked)
             if (string.IsNullOrEmpty(supportedFiletype))
                supportedFiletype = filetypeOffice + ", " + filetypeOfficex;
@@ -330,11 +334,37 @@ namespace brf
                supportedFiletype += ", " + filetypeText;
 
          if (chkbFilesAll.Checked)
+         {
             if (string.IsNullOrEmpty(supportedFiletype))
                supportedFiletype = filetypeEverythin;
             else
                supportedFiletype += ", " + filetypeEverythin;
-         #endregion
+         }
+
+         return supportedFiletype;
+      }
+
+      /// <summary>
+      /// main process
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
+      private void btnSelectFolder_Click(object sender, EventArgs e)
+      {
+         FolderBrowserDialog fbdResult = new FolderBrowserDialog();
+         int counter = 0;
+
+         // disable sub folders option once event is started
+         if (!chksubfolders.Checked)
+         {
+            SearchOptionUserType = SearchOption.TopDirectoryOnly;
+            chksubfolders.Enabled = false;
+         }
+
+         supportedFiletype = string.Empty;
+
+         // What type of files must be included?
+         supportedFiletype = WhatTypeOfFiles();
 
          #region evaluate if there's some selected, related to file type
          // check if have any file type to read
