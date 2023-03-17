@@ -130,7 +130,6 @@ namespace brf
          // get file list from supported file types selected
          foreach (var supportedFile in Directory.GetFiles(globFolder, "*.*", SearchOptionUserType).Where(s => supportedFiletype.Contains(Path.GetExtension(s).ToLower())))
          {
-            counter += 1;
             filename = string.Empty;
             finalName = string.Empty;
 
@@ -154,6 +153,8 @@ namespace brf
          {
             lvFinalPrev.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
          }
+         else
+            MessageBox.Show(counter.ToString() + " files found " + vbCrl + "...for '" + whatToFind + "'", "Something went wrong: no files found!", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
          //SaveLogToFile("", "Component.Testing.CRUD", "Previsualizando", "uno:asdasd;dos:dfgdfgdfg;tres:dfgdfgd");
 
@@ -201,7 +202,7 @@ namespace brf
                   // exist file?
                   if (File.Exists(originalFileName))
                   {
-                     // jusp procces if the file has the same name
+                     // jusp procces if the file doesn't exist
                      if (originalFileName != newFileName)
                      {
                         File.Move(originalFileName, newFileName);
