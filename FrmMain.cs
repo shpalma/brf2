@@ -61,7 +61,9 @@ namespace brf
 
          globFolder = string.Empty;
          lblFolderSelected.Text = "[...]";
-         lvFilesFolders.Items.Clear();
+		 lblFolderSelected.ForeColor = System.Drawing.Color.Black;
+
+		 lvFilesFolders.Items.Clear();
 
       }
 
@@ -127,27 +129,58 @@ namespace brf
          lvFinalPrev.View = View.Details;
          lvFinalPrev.HeaderStyle = ColumnHeaderStyle.None;
 
-         // get file list from supported file types selected
-         foreach (var supportedFile in Directory.GetFiles(globFolder, "*.*", SearchOptionUserType).Where(s => supportedFiletype.Contains(Path.GetExtension(s).ToLower())))
-         {
-            filename = string.Empty;
-            finalName = string.Empty;
+		 if(supportedFiletype == "*.*")
+		 {
+			// get file list from supported file types selected
+			foreach(var supportedFile in Directory.GetFiles(globFolder, "*.*", SearchOptionUserType))
+			{
+			   filename = string.Empty;
+			   finalName = string.Empty;
 
-            filename = System.IO.Path.GetFileName(supportedFile).ToLower();
-            whatToFind = txtReplaceThis.Text.ToLower();
+			   filename = System.IO.Path.GetFileName(supportedFile).ToLower();
+			   whatToFind = txtReplaceThis.Text.ToLower();
 
-            if (filename.Contains(whatToFind))
-            {
-               counter += 1;
+			   if(filename.Contains(whatToFind))
+			   {
+				  counter += 1;
 
-               replaceForThis = txtReplaceForThis.Text;
-               finalName = filename.Replace(whatToFind, replaceForThis);
+				  replaceForThis = txtReplaceForThis.Text;
+				  finalName = filename.Replace(whatToFind, replaceForThis);
 
-               Console.WriteLine("File Name : {0}", System.IO.Path.GetFileName(finalName));
-               lvFinalPrev.Items.Add(finalName);
-            }
+				  Console.WriteLine("File Original Name : {0}", System.IO.Path.GetFileName(filename));
+				  Console.WriteLine("File renamed Name : {0}", System.IO.Path.GetFileName(finalName));
+				  lvFinalPrev.Items.Add(finalName);
+			   }
 
-         }
+			}
+		 }
+		 else
+		 { 
+			// get file list from supported file types selected
+			foreach (var supportedFile in Directory.GetFiles(globFolder, "*.*", SearchOptionUserType).Where(s => supportedFiletype.Contains(Path.GetExtension(s).ToLower())))
+			{
+			   filename = string.Empty;
+			   finalName = string.Empty;
+
+			   filename = System.IO.Path.GetFileName(supportedFile).ToLower();
+			   whatToFind = txtReplaceThis.Text.ToLower();
+
+			   if (filename.Contains(whatToFind))
+			   {
+				  counter += 1;
+
+				  replaceForThis = txtReplaceForThis.Text;
+				  finalName = filename.Replace(whatToFind, replaceForThis);
+
+				  Console.WriteLine("File Original Name : {0}", System.IO.Path.GetFileName(filename));
+				  Console.WriteLine("File renamed Name : {0}", System.IO.Path.GetFileName(finalName));
+				  lvFinalPrev.Items.Add(finalName);
+			   }
+
+			}
+		 
+		 }
+
 
          if (counter >= 1)
          {
@@ -188,10 +221,11 @@ namespace brf
                   finalName = filename.ToLower().Replace(txtReplaceThis.Text.ToLower(), txtReplaceForThis.Text.ToLower());
                   statusStrip.Text = "...getting file name.";
 
-                  Console.WriteLine("File Name : {0}", finalName);
+				  Console.WriteLine("File original Name : {0}", filename);
+				  Console.WriteLine("File renamed Name : {0}", finalName);
 
-                  // rename (move) file!!!
-                  string originalFileName = string.Empty;
+				  // rename (move) file!!!
+				  string originalFileName = string.Empty;
                   string newFileName = string.Empty;
 
                   // determine path and file name: original
@@ -392,7 +426,9 @@ namespace brf
          {
             lblFolderSelected.Text = fbdFolder.SelectedPath.ToString();
             globFolder = fbdFolder.SelectedPath.ToString();
-         }
+			lblFolderSelected.ForeColor = System.Drawing.Color.Navy;
+
+		 }
          else
             return;
 
@@ -404,13 +440,26 @@ namespace brf
          lvFilesFolders.View = View.Details;
          lvFilesFolders.HeaderStyle = ColumnHeaderStyle.None;
 
-         // get file list from supported file types selected
-         foreach (var supportedFile in Directory.GetFiles(globFolder, "*.*", SearchOptionUserType).Where(s => supportedFiletype.Contains(Path.GetExtension(s).ToLower())))
-         {
-            counter += 1;
-            Console.WriteLine("File Name : {0}", System.IO.Path.GetFileName(supportedFile));
-            lvFilesFolders.Items.Add(System.IO.Path.GetFileName(supportedFile));
-         }
+		 if(supportedFiletype == "*.*")
+		 {
+			foreach(var supportedFile in Directory.GetFiles(globFolder, "*.*", SearchOptionUserType))
+			{
+			   counter += 1;
+			   Console.WriteLine("File Name : {0}", System.IO.Path.GetFileName(supportedFile));
+			   lvFilesFolders.Items.Add(System.IO.Path.GetFileName(supportedFile));
+			}
+		 }
+		 else
+		 { 
+			// get file list from supported file types selected
+			foreach (var supportedFile in Directory.GetFiles(globFolder, "*.*", SearchOptionUserType).Where(s => supportedFiletype.Contains(Path.GetExtension(s).ToLower())))
+			{
+			   counter += 1;
+			   Console.WriteLine("File Name : {0}", System.IO.Path.GetFileName(supportedFile));
+			   lvFilesFolders.Items.Add(System.IO.Path.GetFileName(supportedFile));
+			}
+		 
+		 }
 
          if (counter <= 0)
          {
